@@ -1,0 +1,11 @@
+{
+  "items": [
+    {
+      "id": "fire_sword",
+      "name": "火焰剑",
+      "type": "weapon",
+      "description": "一把燃烧的剑",
+      "stats": { "attack": 10 }
+    }
+  ]
+}
