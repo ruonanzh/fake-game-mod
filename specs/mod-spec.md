@@ -45,4 +45,4 @@
 - mod 名：`lower_snake_case`，与 `your_mods/` 下的目录名一致。
 - 物品 `id`：`lower_snake_case`，全局唯一。
 
-> 本规范的可执行版是 `lint/check_mod.mjs`——这里每条约束，lint 都要能校验。
+> 本规范的可执行版是 `validate_mod` 工具——这里每条约束，它都要能校验。

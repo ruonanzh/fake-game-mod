@@ -1,23 +1,23 @@
 ---
 name: mod-authoring
-description: 在 Fake Game 的 modding 环境里创建、修改、校验 mod（your_mods/<mod名>/ 下的 manifest.json + content.json）。当任务是在本环境做 mod、跑 lint 校验 mod 时使用。
+description: 在 Fake Game 的 modding 环境里创建、修改、校验 mod（your_mods/<mod名>/ 下的 manifest.json + content.json）。当任务是在本环境做 mod、调 validate_mod 工具校验 mod 时使用。
 ---
 
 # 做 mod（Fake Game）
 
-在 `your_mods/<mod名>/` 下做一个 mod，用 `lint/check_mod.mjs` 校验。
+在 `your_mods/<mod名>/` 下做一个 mod，用 `validate_mod` 工具校验。
 
 ## 唯一可写目录
 
-`your_mods/<mod名>/` 是唯一可写目录。环境的 `docs/`、`specs/`、`lint/`、`reference/` 一律只读，别把中间文件写回去。
+`your_mods/<mod名>/` 是唯一可写目录。环境的 `docs/`、`specs/`、`.pi/`、`reference/` 一律只读，别把中间文件写回去。
 
 ## 步骤
 
-1. 先跑 `node tools/check_runtime.mjs` 确认环境就绪（本类型无依赖，应返回 PASS）。
+1. 先调 `check_runtime` 工具确认环境就绪（本类型无依赖，应返回 PASS）。
 2. 读 `specs/mod-spec.md`（schema + 命名约定）和 `docs/items.md`（字段说明）。
 3. 在 `your_mods/<mod名>/` 下创建 `manifest.json`。
 4. 在 `your_mods/<mod名>/` 下创建 `content.json`。
-5. 校验：`node lint/check_mod.mjs your_mods/<mod名>/`，直到输出 `PASS`（exit 0）。
+5. 校验：调 `validate_mod` 工具（参数 modDir），直到返回 `PASS`。
 
 ## manifest.json
 
@@ -58,15 +58,13 @@ description: 在 Fake Game 的 modding 环境里创建、修改、校验 mod（y
 - mod 名 / 目录名：`lower_snake_case`（`^[a-z][a-z0-9_]*$`）。
 - 物品 `id`：`lower_snake_case`，全局唯一。
 
-## lint 用法
+## validate_mod 工具用法
 
-```bash
-node lint/check_mod.mjs your_mods/<mod名>/
-```
+调 `validate_mod` 工具，参数 `modDir = your_mods/<mod名>/`。
 
-- exit `0`：通过，打印 `PASS: <名> is valid`。
-- exit `1`：失败，逐条打印 `FAIL: <原因>`（英文），直接指向缺失/不合法的字段。
-- exit `2`：用法错误（参数个数不对）。
+- 返回 `PASS: <名> is valid`：通过。
+- 返回 `FAIL: <原因>`（逐条，英文）：失败，直接指向缺失/不合法的字段。
+- `details.ok` 为 false 时表示校验未通过。
 
 ## 常见错误（对照修正）
 
@@ -79,5 +77,5 @@ node lint/check_mod.mjs your_mods/<mod名>/
 
 ## 参考
 
-- 完整可过 lint 的样例：`reference/example_mod/`。
+- 完整可过校验的样例：`reference/example_mod/`。
 - 字段定义：`docs/items.md`；规范原文：`specs/mod-spec.md`。
