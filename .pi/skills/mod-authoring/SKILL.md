@@ -13,10 +13,11 @@ description: 在 Fake Game 的 modding 环境里创建、修改、校验 mod（y
 
 ## 步骤
 
-1. 读 `specs/mod-spec.md`（schema + 命名约定）和 `docs/items.md`（字段说明）。
-2. 在 `your_mods/<mod名>/` 下创建 `manifest.json`。
-3. 在 `your_mods/<mod名>/` 下创建 `content.json`。
-4. 校验：`node lint/check_mod.mjs your_mods/<mod名>/`，直到输出 `PASS`（exit 0）。
+1. 先跑 `node tools/check_runtime.mjs` 确认环境就绪（本类型无依赖，应返回 PASS）。
+2. 读 `specs/mod-spec.md`（schema + 命名约定）和 `docs/items.md`（字段说明）。
+3. 在 `your_mods/<mod名>/` 下创建 `manifest.json`。
+4. 在 `your_mods/<mod名>/` 下创建 `content.json`。
+5. 校验：`node lint/check_mod.mjs your_mods/<mod名>/`，直到输出 `PASS`（exit 0）。
 
 ## manifest.json
 
