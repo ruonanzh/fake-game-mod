@@ -14,10 +14,11 @@ description: 在 Fake Game 的 modding 环境里创建、修改、校验 mod（y
 ## 步骤
 
 1. 先调 `check_runtime` 工具确认环境就绪（本类型无依赖，应返回 PASS）。
-2. 读 `specs/mod-spec.md`（schema + 命名约定）和 `docs/items.md`（字段说明）。
-3. 在 `your_mods/<mod名>/` 下创建 `manifest.json`。
-4. 在 `your_mods/<mod名>/` 下创建 `content.json`。
-5. 校验：调 `validate_mod` 工具（参数 modDir），直到返回 `PASS`。
+2. 调 `create_mod_folder` 工具创建 mod 目录：给它一个简短的 `lower_snake_case` 名字，它会建好 `your_mods/<mod名>/` 并登记；**在此之前任何 write/edit 都会被拒**。
+3. 读 `specs/mod-spec.md`（schema + 命名约定）和 `docs/items.md`（字段说明）。
+4. 在 `your_mods/<mod名>/` 下创建 `manifest.json`。
+5. 在 `your_mods/<mod名>/` 下创建 `content.json`。
+6. 校验：调 `validate_mod` 工具（参数 modDir），直到返回 `PASS`。
 
 ## manifest.json
 
