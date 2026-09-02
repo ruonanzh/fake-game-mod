@@ -18,8 +18,9 @@ mod 只能写到 `your_mods/<mod名>/`，环境的其它目录（docs/specs/.pi/
 ## 做 mod（流程概览）
 
 1. 先调 `check_runtime` 工具确认环境就绪（本类型无依赖，应返回 PASS）
-2. 读 `specs/` 与 `docs/` 了解格式
-3. 在 `your_mods/<mod名>/` 下创建 `manifest.json` + `content.json`
-4. 调 `validate_mod` 工具校验（返回 PASS 即通过）
+2. 调 `create_mod_folder` 工具创建你的 mod 目录（起个 lower_snake_case 名字）——**在此之前所有 write/edit 都会被拒**
+3. 读 `specs/` 与 `docs/` 了解格式
+4. 在 `your_mods/<mod名>/` 下创建 `manifest.json` + `content.json`
+5. 调 `validate_mod` 工具校验（返回 PASS 即通过）
 
 详细步骤、字段说明、常见错误见 skill：`.pi/skills/mod-authoring/`（做 mod 时先加载它）。
