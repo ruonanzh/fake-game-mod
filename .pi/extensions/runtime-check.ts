@@ -11,12 +11,12 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "check_runtime",
     label: "Check Runtime",
-    description: "Check whether the mod runtime is ready (dotnet, game dir, etc.)",
-    promptSnippet: "Check mod runtime readiness",
-    promptGuidelines: ["Use check_runtime before writing mod code to ensure the runtime is ready."],
+    description: "Report runtime prerequisites for this JSON-only game workspace. There are no extra SDK or compiler dependencies. No files are written and no software is installed; this does not validate a mod or test gameplay.",
+    promptSnippet: "Report runtime prerequisites when the player asks about environment setup",
+    promptGuidelines: ["Use check_runtime only when setup information is needed; JSON mod authoring here has no extra runtime prerequisites."],
     parameters: Type.Object({}),
     async execute() {
-      return { content: [{ type: "text", text: "PASS: no runtime dependencies" }] };
+      return { content: [{ type: "text", text: "PASS: no runtime dependencies. No installation or mod validation was performed." }], details: { ok: true, status: "not_required", nextAction: "For mod validation, use validate_mod on the existing mod directory." } };
     },
   });
 }

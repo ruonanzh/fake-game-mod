@@ -1,7 +1,7 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { readFileSync, existsSync, statSync } from "node:fs";
-import { join, basename } from "node:path";
+import { join, basename, resolve } from "node:path";
 
 const ITEM_TYPES = new Set(["weapon", "armor", "consumable"]);
 const NAME_RE = /^[a-z][a-z0-9_]*$/;
@@ -24,22 +24,23 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "validate_mod",
     label: "Validate Mod",
-    description: "Validate a mod (manifest.json + content.json against specs/mod-spec.md)",
-    promptSnippet: "Validate a mod under your_mods/",
+    description: "Read and validate manifest.json and content.json in an existing mod directory against specs/mod-spec.md. Resolve relative modDir from the workspace root. No files are modified, no compilation or game execution occurs. Returns ok/errors/warnings plus status/checks/nextAction; PASS means static validation only.",
+    promptSnippet: "Check an existing JSON mod's fields and naming without modifying files",
     promptGuidelines: [
-      "Use validate_mod after writing a mod to check it passes the spec.",
+      "Use validate_mod when relevant mod content has changed or validation is requested. Read errors and nextAction; do not repeat an unchanged failing check indefinitely.",
     ],
     parameters: Type.Object({
-      modDir: Type.String({ description: "Path to the mod directory (e.g. your_mods/<ModName>)" }),
+      modDir: Type.String({ minLength: 1, description: "Existing mod directory; absolute or relative to workspace root, e.g. your_mods/my_mod (not relative to the skill)." }),
     }),
-    async execute(_toolCallId, params, _signal, _onUpdate, _ctx) {
-      const modDir = params.modDir;
+    async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
+      if (!params.modDir.trim()) throw new Error("INVALID_MOD_DIR: Provide an existing mod directory, e.g. your_mods/my_mod.");
+      const modDir = resolve(ctx.cwd, params.modDir);
       const errors: string[] = [];
 
       if (!statSync(modDir, { throwIfNoEntry: false })?.isDirectory()) {
         return {
-          content: [{ type: "text", text: `FAIL: ${modDir} is not a directory` }],
-          details: { ok: false, errors: [`${modDir} is not a directory`], warnings: [] },
+          content: [{ type: "text", text: `FAIL: ${modDir} is not a directory. Check the session's bound path or ask the player to restore it; do not create a replacement merely to validate.` }],
+          details: { ok: false, status: "blocked", errors: [`${modDir} is not a directory`], warnings: [], nextAction: "Provide an existing directory; relative paths use the workspace root." },
         };
       }
 
@@ -73,6 +74,10 @@ export default function (pi: ExtensionAPI) {
         } else {
           const seen = new Set<string>();
           items.forEach((item, i) => {
+            if (!item || typeof item !== "object" || Array.isArray(item)) {
+              errors.push(`items[${i}] must be an object with id, name and type`);
+              return;
+            }
             const it = item as Record<string, unknown>;
             for (const key of ["id", "name", "type"]) {
               if (!it[key]) errors.push(`items[${i}].${key} is missing or empty`);
@@ -90,10 +95,14 @@ export default function (pi: ExtensionAPI) {
 
       const ok = errors.length === 0;
       const lines = errors.map((e) => `FAIL: ${e}`);
-      if (ok) lines.push(`PASS: ${basename(modDir)} is valid`);
+      if (ok) lines.push(`PASS: ${basename(modDir)} is valid (static JSON checks only; not tested in-game).`);
+      const nextAction = ok
+        ? "Report the static validation result; do not claim in-game testing was performed."
+        : "Read the reported fields and specs/mod-spec.md. Correct source only in an authorized mod session, then validate again; do not modify other mods.";
+      lines.push(`NEXT: ${nextAction}`);
       return {
         content: [{ type: "text", text: lines.join("\n") }],
-        details: { ok, errors, warnings: [] },
+        details: { ok, errors, warnings: [], status: ok ? "passed" : "failed", checks: { static: ok ? "passed" : "failed", gameRuntime: "not_run" }, nextAction },
       };
     },
   });

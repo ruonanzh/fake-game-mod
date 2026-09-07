@@ -1,24 +1,21 @@
 ---
 name: mod-authoring
-description: 在 Fake Game 的 modding 环境里创建、修改、校验 mod（your_mods/<mod名>/ 下的 manifest.json + content.json）。当任务是在本环境做 mod、调 validate_mod 工具校验 mod 时使用。
+description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解释与校验排错。任务涉及 manifest.json、content.json、物品字段或 validate_mod 时按需读取；仅咨询不要求创建文件，实际写入取决于 session 权限。
 ---
 
 # 做 mod（Fake Game）
 
 在 `your_mods/<mod名>/` 下做一个 mod，用 `validate_mod` 工具校验。
 
-## 唯一可写目录
+## 使用方式与条件分支
 
-`your_mods/<mod名>/` 是唯一可写目录。环境的 `docs/`、`specs/`、`.pi/`、`reference/` 一律只读，别把中间文件写回去。
+本技能提供领域方法，不授予权限；Game Helper 可用于解释/校验已有 mod，不能因此创建目录或修改源码。以下路径均相对 workspace 根目录（不是技能目录）。
 
-## 步骤
-
-1. 先调 `check_runtime` 工具确认环境就绪（本类型无依赖，应返回 PASS）。
-2. 调 `create_mod_folder` 工具创建 mod 目录：给它一个简短的 `lower_snake_case` 名字，它会建好 `your_mods/<mod名>/` 并登记；**在此之前任何 write/edit 都会被拒**。
-3. 读 `specs/mod-spec.md`（schema + 命名约定）和 `docs/items.md`（字段说明）。
-4. 在 `your_mods/<mod名>/` 下创建 `manifest.json`。
-5. 在 `your_mods/<mod名>/` 下创建 `content.json`。
-6. 校验：调 `validate_mod` 工具（参数 modDir），直到返回 `PASS`。
+- **咨询/可行性**：先确定玩家要的效果，检索 `docs/` 与 `specs/`。不因为读取本技能就创建文件或检查运行时。
+- **实际制作/修改**：复用 `reference/example_mod/` 的结构。写入仅限当前 session 绑定目录；无绑定且准备写入时才调 `create_mod_folder`，选择符合规范的 `lower_snake_case` 名字。已有绑定继续使用，缺失目录先说明阻塞，不另建第二个绑定。
+- **格式不明**：按需读 `specs/mod-spec.md` 和 `docs/items.md`，再实现 `manifest.json`/`content.json`。合理默认小细节，只有影响主要效果的歧义才询问。
+- **运行时**：此 JSON 类型没有额外运行时依赖；正常制作无需机械调用 `check_runtime`/`install_runtime`。玩家明确询问环境时可使用工具核实。
+- **验证**：产物完成或相关内容变化后调用 `validate_mod`。依据错误修复；重复失败先查根因，缺外部信息则报告阻塞，不无限重试。
 
 ## manifest.json
 
@@ -63,9 +60,9 @@ description: 在 Fake Game 的 modding 环境里创建、修改、校验 mod（y
 
 调 `validate_mod` 工具，参数 `modDir = your_mods/<mod名>/`。
 
-- 返回 `PASS: <名> is valid`：通过。
-- 返回 `FAIL: <原因>`（逐条，英文）：失败，直接指向缺失/不合法的字段。
-- `details.ok` 为 false 时表示校验未通过。
+- 返回 `PASS: <名> is valid`：本工具的 JSON 静态检查通过，不代表在游戏内运行过。
+- 返回 `FAIL: <原因>`（逐条，英文）：失败，直接指向缺失/不合法的字段；结合 `nextAction` 定位，不修改其他 mod。
+- `details.ok` 为 false 时表示校验未通过；最终说明生成内容与实际检查结果，未做的验证明确保留。
 
 ## 常见错误（对照修正）
 
