@@ -15,6 +15,13 @@ function readJson(filePath: string): unknown | null {
   }
 }
 
+/** 截断长输出，避免爆 LLM 上下文（pi 标准 50KB/2000 行，这里取保守的 200 行）。 */
+function truncateLines(text: string, maxLines = 200): string {
+  const lines = text.split("\n");
+  if (lines.length <= maxLines) return text;
+  return `${lines.slice(0, maxLines).join("\n")}\n... (${lines.length - maxLines} more lines truncated)`;
+}
+
 /**
  * validate_mod — mod 校验工具（json mod type）。
  * 校验 manifest.json + content.json 是否符合 specs/mod-spec.md。
@@ -37,11 +44,9 @@ export default function (pi: ExtensionAPI) {
       const modDir = resolve(ctx.cwd, params.modDir);
       const errors: string[] = [];
 
+      // 目录不存在 = 参数错误/前置条件不满足，throw 标记 isError
       if (!statSync(modDir, { throwIfNoEntry: false })?.isDirectory()) {
-        return {
-          content: [{ type: "text", text: `FAIL: ${modDir} is not a directory. Check the session's bound path or ask the player to restore it; do not create a replacement merely to validate.` }],
-          details: { ok: false, errors: [`${modDir} is not a directory`], warnings: [] },
-        };
+        throw new Error(`INVALID_MOD_DIR: ${modDir} is not a directory. Check the session's bound path or ask the player to restore it; do not create a replacement merely to validate.`);
       }
 
       // manifest.json
@@ -101,7 +106,7 @@ export default function (pi: ExtensionAPI) {
         : "Read the reported fields and specs/mod-spec.md. Correct source only in an authorized mod session, then validate again; do not modify other mods.";
       lines.push(`NEXT: ${nextAction}`);
       return {
-        content: [{ type: "text", text: lines.join("\n") }],
+        content: [{ type: "text", text: truncateLines(lines.join("\n")) }],
         details: { ok, errors, warnings: [] },
       };
     },
