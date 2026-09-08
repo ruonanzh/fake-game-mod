@@ -16,7 +16,7 @@ export default function (pi: ExtensionAPI) {
     promptGuidelines: ["Do not routinely call install_runtime for this workspace; there are no extra runtime dependencies."],
     parameters: Type.Object({}),
     async execute() {
-      return { content: [{ type: "text", text: "SKIP: no runtime dependencies; no installation was performed." }], details: { ok: true, status: "not_required", installationPerformed: false, nextAction: "Continue the requested task; no SDK installation is needed." } };
+      return { content: [{ type: "text", text: "SKIP: no runtime dependencies; no installation was performed." }], details: { ok: true } };
     },
   });
 }

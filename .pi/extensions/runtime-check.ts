@@ -16,7 +16,7 @@ export default function (pi: ExtensionAPI) {
     promptGuidelines: ["Use check_runtime only when setup information is needed; JSON mod authoring here has no extra runtime prerequisites."],
     parameters: Type.Object({}),
     async execute() {
-      return { content: [{ type: "text", text: "PASS: no runtime dependencies. No installation or mod validation was performed." }], details: { ok: true, status: "not_required", nextAction: "For mod validation, use validate_mod on the existing mod directory." } };
+      return { content: [{ type: "text", text: "PASS: no runtime dependencies. No installation or mod validation was performed." }], details: { ok: true } };
     },
   });
 }

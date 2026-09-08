@@ -24,10 +24,10 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "validate_mod",
     label: "Validate Mod",
-    description: "Read and validate manifest.json and content.json in an existing mod directory against specs/mod-spec.md. Resolve relative modDir from the workspace root. No files are modified, no compilation or game execution occurs. Returns ok/errors/warnings plus status/checks/nextAction; PASS means static validation only.",
+    description: "Read and validate manifest.json and content.json in an existing mod directory against specs/mod-spec.md. Resolve relative modDir from the workspace root. No files are modified, no compilation or game execution occurs. Output text uses PASS/FAIL and a NEXT line for next steps; PASS means static validation only.",
     promptSnippet: "Check an existing JSON mod's fields and naming without modifying files",
     promptGuidelines: [
-      "Use validate_mod when relevant mod content has changed or validation is requested. Read errors and nextAction; do not repeat an unchanged failing check indefinitely.",
+      "Use validate_mod when relevant mod content has changed or validation is requested. Read errors and the NEXT line; do not repeat an unchanged failing check indefinitely.",
     ],
     parameters: Type.Object({
       modDir: Type.String({ minLength: 1, description: "Existing mod directory; absolute or relative to workspace root, e.g. your_mods/my_mod (not relative to the skill)." }),
@@ -40,7 +40,7 @@ export default function (pi: ExtensionAPI) {
       if (!statSync(modDir, { throwIfNoEntry: false })?.isDirectory()) {
         return {
           content: [{ type: "text", text: `FAIL: ${modDir} is not a directory. Check the session's bound path or ask the player to restore it; do not create a replacement merely to validate.` }],
-          details: { ok: false, status: "blocked", errors: [`${modDir} is not a directory`], warnings: [], nextAction: "Provide an existing directory; relative paths use the workspace root." },
+          details: { ok: false, errors: [`${modDir} is not a directory`], warnings: [] },
         };
       }
 
@@ -102,7 +102,7 @@ export default function (pi: ExtensionAPI) {
       lines.push(`NEXT: ${nextAction}`);
       return {
         content: [{ type: "text", text: lines.join("\n") }],
-        details: { ok, errors, warnings: [], status: ok ? "passed" : "failed", checks: { static: ok ? "passed" : "failed", gameRuntime: "not_run" }, nextAction },
+        details: { ok, errors, warnings: [] },
       };
     },
   });
