@@ -24,14 +24,14 @@ function truncateLines(text: string, maxLines = 200): string {
 
 /**
  * validate_mod — mod 校验工具（json mod type）。
- * 校验 manifest.json + content.json 是否符合 specs/mod-spec.md。
+ * 校验 manifest.json + content.json 的字段与命名。
  * 契约见 docs/mod-repo-guide.md §3.1。
  */
 export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "validate_mod",
     label: "Validate Mod",
-    description: "Read and validate manifest.json and content.json in an existing mod directory against specs/mod-spec.md. Resolve relative modDir from the workspace root. No files are modified, no compilation or game execution occurs. Output text uses PASS/FAIL and a NEXT line for next steps; PASS means static validation only.",
+    description: "Read and validate manifest.json and content.json in an existing mod directory (fields and naming). Resolve relative modDir from the workspace root. No files are modified, no compilation or game execution occurs. Output text uses PASS/FAIL and a NEXT line for next steps; PASS means static validation only.",
     promptSnippet: "Check an existing JSON mod's fields and naming without modifying files",
     promptGuidelines: [
       "Use validate_mod when relevant mod content has changed or validation is requested. Read errors and the NEXT line; do not repeat an unchanged failing check indefinitely.",
@@ -103,7 +103,7 @@ export default function (pi: ExtensionAPI) {
       if (ok) lines.push(`PASS: ${basename(modDir)} is valid (static JSON checks only; not tested in-game).`);
       const nextAction = ok
         ? "Report the static validation result; do not claim in-game testing was performed."
-        : "Read the reported fields and specs/mod-spec.md. Correct source only in an authorized mod session, then validate again; do not modify other mods.";
+        : "Read the reported fields and errors. Correct source only in an authorized mod session, then validate again; do not modify other mods.";
       lines.push(`NEXT: ${nextAction}`);
       return {
         content: [{ type: "text", text: truncateLines(lines.join("\n")) }],
