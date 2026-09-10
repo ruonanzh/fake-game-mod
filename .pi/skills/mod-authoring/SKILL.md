@@ -5,15 +5,20 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 
 # 做 mod（Fake Game）
 
-在 `your_mods/<mod名>/` 下做一个 mod，用 `validate_mod` 工具校验。
+一个 mod 是 `your_mods/<mod名>/` 目录，含两个文件：
+
+- `manifest.json` — mod 元信息
+- `content.json` — mod 内容（物品）
+
+做好后用 `validate_mod` 工具校验。
 
 ## 使用方式与条件分支
 
 本技能提供领域方法，不授予权限；Game Helper 可用于解释/校验已有 mod，不能因此创建目录或修改源码。以下路径均相对 workspace 根目录（不是技能目录）。
 
-- **咨询/可行性**：先确定玩家要的效果，检索 `docs/` 与 `specs/`。不因为读取本技能就创建文件或检查运行时。
+- **咨询/可行性**：先确定玩家要的效果，检索 `docs/`。不因为读取本技能就创建文件或检查运行时。
 - **实际制作/修改**：复用 `reference/example_mod/` 的结构。写入仅限当前 session 绑定目录；无绑定且准备写入时才调 `create_mod_folder`，选择符合规范的 `lower_snake_case` 名字。已有绑定继续使用，缺失目录先说明阻塞，不另建第二个绑定。
-- **格式不明**：按需读 `specs/mod-spec.md` 和 `docs/items.md`，再实现 `manifest.json`/`content.json`。合理默认小细节，只有影响主要效果的歧义才询问。
+- **格式不明**：按需读 `docs/items.md`，再实现 `manifest.json`/`content.json`。合理默认小细节，只有影响主要效果的歧义才询问。
 - **运行时**：此 JSON 类型没有额外运行时依赖；正常制作无需机械调用 `check_runtime`/`install_runtime`。玩家明确询问环境时可使用工具核实。
 - **验证**：产物完成或相关内容变化后调用 `validate_mod`。依据错误修复；重复失败先查根因，缺外部信息则报告阻塞，不无限重试。
 
@@ -28,9 +33,10 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 }
 ```
 
-- `name`：必填，`lower_snake_case`，且与目录名**完全一致**。
-- `version`：必填，semver `x.y.z`。
-- `description`、`author`：必填，非空。
+- `name`：mod 名，与目录名一致、`lower_snake_case`（validate_mod 校验）。
+- `version`：版本号，semver `x.y.z`（validate_mod 校验）。
+- `description`：描述，一句话说明这个 mod 做什么（validate_mod 校验非空）。
+- `author`：作者（validate_mod 校验非空）。
 
 ## content.json
 
@@ -48,20 +54,20 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 }
 ```
 
-- `items` 必须是非空数组。每个元素字段见 `docs/items.md`。
-- 物品 `id`：`lower_snake_case`，同一 mod 内全局唯一。
+- `items`：物品数组（validate_mod 校验非空）。每个元素字段见 `docs/items.md`。
+- 物品 `id`：`lower_snake_case`，同一 mod 内全局唯一（validate_mod 校验）。
 
 ## 命名约定
 
-- mod 名 / 目录名：`lower_snake_case`（`^[a-z][a-z0-9_]*$`）。
-- 物品 `id`：`lower_snake_case`，全局唯一。
+- mod 名 / 目录名：`lower_snake_case`（validate_mod 校验）。
+- 物品 `id`：`lower_snake_case`，全局唯一（validate_mod 校验）。
 
 ## validate_mod 工具用法
 
 调 `validate_mod` 工具，参数 `modDir = your_mods/<mod名>/`。
 
 - 返回 `PASS: <名> is valid`：本工具的 JSON 静态检查通过，不代表在游戏内运行过。
-- 返回 `FAIL: <原因>`（逐条，英文）：失败，直接指向缺失/不合法的字段；结合 `nextAction` 定位，不修改其他 mod。
+- 返回 `FAIL: <原因>`（逐条，英文）：失败，直接指向缺失/不合法的字段；结合 `NEXT:` 行定位，不修改其他 mod。
 - 输出含 `FAIL` 时表示校验未通过；最终说明生成内容与实际检查结果，未做的验证明确保留。
 
 ## 常见错误（对照修正）
@@ -76,4 +82,4 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 ## 参考
 
 - 完整可过校验的样例：`reference/example_mod/`。
-- 字段定义：`docs/items.md`；规范原文：`specs/mod-spec.md`。
+- 字段定义：`docs/items.md`。
