@@ -21,6 +21,7 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 - **格式不明**：按需读 `docs/items.md`，再实现 `manifest.json`/`content.json`。合理默认小细节，只有影响主要效果的歧义才询问。
 - **运行时**：此 JSON 类型没有额外运行时依赖；正常制作无需机械调用 `check_runtime`/`install_runtime`。玩家明确询问环境时可使用工具核实。
 - **验证**：产物完成或相关内容变化后调用 `validate_mod`。依据错误修复；重复失败先查根因，缺外部信息则报告阻塞，不无限重试。
+- **装进游戏**：本类型**没有安装这一步**——`modInstall` 为 null，游戏直接从 `your_mods/<mod名>/` 读取 `content.json`。`install_mod` 是如实说明「无需安装」的空壳，不要机械调用，也不要把它当成漏做的一步。玩家问「怎么让 mod 生效」时，按 `docs/game.md` 的数据流解释（启动时扫描合并，物品 id 全局唯一、重复覆盖）。
 
 ## manifest.json
 
