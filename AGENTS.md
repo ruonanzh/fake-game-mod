@@ -8,7 +8,7 @@
 - `reference/example_mod/`：可复用样例；产物格式与字段见 `.pi/skills/mod-authoring/SKILL.md`。
 - `mod-repo.json`：机器可读的游戏与环境声明。
 - `.pi/skills/mod-authoring/`：制作、修改和校验的领域方法，任务需要时读取。
-- `.pi/extensions/`：环境检查、安装指引和 mod 校验工具；以工具声明的能力/副作用为准。
+- `.pi/extensions/`：环境检查、安装指引、mod 校验、装进游戏（`install_mod`，本类型为空壳：无需安装）；以工具声明的能力/副作用为准。
 
 ## 工作区边界
 
