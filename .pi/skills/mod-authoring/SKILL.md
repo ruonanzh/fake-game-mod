@@ -101,3 +101,4 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 - 玩家问"mod 装在哪"→ 说明这个类型是在工作区内产出并用 `validate_mod` 校验，没有游戏安装目标。
 - 真正有游戏目录的类型（如 csharp-dll）见 `templates/mod-repo` 的骨架：判据放 `.pi/lib/game-paths.ts`，
   由 `check_game_paths` / `try_set_game_paths` / `check_runtime` / `install_mod` 共用。
+- **目录名（我们这边的规则，由 `create_mod_folder` 强制）**：小写字母开头，其后只能是小写字母/数字/下划线，总长 ≤ 40，且不得是 Windows 保留设备名（con/prn/aux/nul/com1-9/lpt1-9）。它上一条里的 `name` 是**两条独立规则**：目录名决定工作区与游戏 `Mods/` 下的目录名，`name` 决定游戏怎么加载 DLL；不要用一条去推另一条。
