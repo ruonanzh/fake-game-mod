@@ -25,7 +25,7 @@ export default function (pi: ExtensionAPI) {
         content: [
           {
             type: "text",
-            text: "PASS: no game install directory in this JSON mod type — nothing to locate and nothing was written.",
+            text: "PASS: no game install directory in this JSON mod type - nothing to locate and nothing was written.",
           },
         ],
         details: { ok: true, notRequired: true, wroteState: false },

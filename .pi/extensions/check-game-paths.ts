@@ -17,7 +17,7 @@ export default function (pi: ExtensionAPI) {
     promptSnippet: "Verify game/mod paths without scanning or writing",
     promptGuidelines: [
       "This workspace has no game install directory: check_game_paths always reports that there is nothing to verify. Do not try to invent paths.",
-      "Do not use check_game_paths to decide whether mod files exist — use validate_mod for that.",
+      "Do not use check_game_paths to decide whether mod files exist - use validate_mod for that.",
     ],
     parameters: Type.Object({
       gameDir: Type.Optional(Type.String({ description: "Ignored in this workspace: there is no game install directory." })),
@@ -29,7 +29,7 @@ export default function (pi: ExtensionAPI) {
         content: [
           {
             type: "text",
-            text: "PASS: no game paths in this JSON mod type — there is no game install directory to verify. Nothing was read, written or created.",
+            text: "PASS: no game paths in this JSON mod type - there is no game install directory to verify. Nothing was read, written or created.",
           },
         ],
         details: { ok: true, notRequired: true, wroteState: false },
