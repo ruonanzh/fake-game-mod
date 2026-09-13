@@ -30,6 +30,17 @@ export default function (pi: ExtensionAPI) {
           "Mod directory, e.g. your_mods/<ModName> (unused for this mod type).",
       }),
     }),
+      // ── 若你的 modType 需要安装（modInstall 非 null），实现时遵守以下四条
+      //    （契约见 desktop-gamer-agent-pi/docs/mod-repo-guide.md §4.1）：────────────────
+      // 1) 目标目录名用 **your_mods 下的目录名**（不是 mod 声明的身份）：目录名是单层名字、
+      //    create_mod_folder 已校验 → 构造上不可能写到 modInstallDir 之外；用 metadata.id /
+      //    info.ini 的 name 拼路径时，带 `../` 的身份就能越界写。
+      // 2) 绝不覆盖别人的内容：目标被别的 mod 占用 → 改名装 `<目录名>_pimod`（再撞顺延）。
+      // 3) 「这目录是不是我上次装的」看目录里的 `.pi-mod.json`，比较的是 **mod 身份**
+      //    （marker 存身份），不能用目录名比 —— 否则身份与目录名不同的 mod 会被装成两份。
+      // 4) 替换必须事务化：旧版本先 rename 到 `.previous-<pid>`（不删）→ 换入新版本 → 成功后才删；
+      //    换入失败把旧版本挪回；入口处恢复上次崩溃留下的孤儿 `.previous-*`（不能当垃圾删）。
+      // ─────────────────────────────────────────────────────────────────────────────
     async execute(_toolCallId, params) {
       void params;
       return {
