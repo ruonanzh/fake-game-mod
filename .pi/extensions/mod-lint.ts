@@ -60,9 +60,6 @@ export default function (pi: ExtensionAPI) {
         if (manifest.version && !SEMVER_RE.test(String(manifest.version))) {
           errors.push(`manifest.version is not semver x.y.z: ${JSON.stringify(manifest.version)}`);
         }
-        if (manifest.name !== basename(modDir)) {
-          errors.push(`manifest.name (${JSON.stringify(manifest.name)}) does not match dir name (${basename(modDir)})`);
-        }
         if (manifest.name && !NAME_RE.test(String(manifest.name))) {
           errors.push(`manifest.name is not lower_snake_case: ${JSON.stringify(manifest.name)}`);
         }

@@ -34,7 +34,7 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 }
 ```
 
-- `name`：mod 名，与目录名一致、`lower_snake_case`（validate_mod 校验）。
+- `name`：mod 名，建议用 `lower_snake_case`（validate_mod 只校验这个格式）。
 - `version`：版本号，semver `x.y.z`（validate_mod 校验）。
 - `description`：描述，一句话说明这个 mod 做什么（validate_mod 校验非空）。
 - `author`：作者（validate_mod 校验非空）。
@@ -73,7 +73,6 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 
 ## 常见错误（对照修正）
 
-- `FAIL: manifest.name (...) does not match dir name (...)` → name 与目录名不一致，改成一致。
 - `FAIL: ... is not lower_snake_case` → name/id 用了大写、连字符或空格，改成 `lower_snake_case`。
 - `FAIL: manifest.version is not semver x.y.z` → version 不是三段数字，补全成 `x.y.z`。
 - `FAIL: content.items must be a non-empty array` → items 为空，至少一个物品。
