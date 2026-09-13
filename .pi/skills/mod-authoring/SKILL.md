@@ -84,3 +84,20 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 
 - 完整可过校验的样例：`reference/example_mod/`。
 - 字段定义：`docs/items.md`。
+
+## 路径工具（gameDir / modInstallDir）
+
+本工作区是 **JSON mod type**：没有游戏安装目录，也没有 mod 安装目标 —— 产出靠 `validate_mod`
+在工作区内校验，不往游戏目录里装。因此这两个路径工具在这里是**明确空壳**：
+
+| 工具 | 在这里的行为 |
+|---|---|
+| `check_game_paths` | 返回「无需验证」；**不读、不写、不创建**任何东西 |
+| `try_set_game_paths` | 返回「无需定位」；**不写状态文件** |
+
+要点：
+
+- 不要给它们传猜测的路径，也不要因为它们的输出而去创建目录。
+- 玩家问"mod 装在哪"→ 说明这个类型是在工作区内产出并用 `validate_mod` 校验，没有游戏安装目标。
+- 真正有游戏目录的类型（如 csharp-dll）见 `templates/mod-repo` 的骨架：判据放 `.pi/lib/game-paths.ts`，
+  由 `check_game_paths` / `try_set_game_paths` / `check_runtime` / `install_mod` 共用。
