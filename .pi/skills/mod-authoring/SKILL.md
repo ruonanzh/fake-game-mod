@@ -92,12 +92,12 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 | 工具 | 在这里的行为 |
 |---|---|
 | `check_game_paths` | 返回「无需验证」；**不读、不写、不创建**任何东西 |
-| `try_set_game_paths` | 返回「无需定位」；**不写状态文件** |
+| `set_game_paths` | 返回「无需定位」；**不写状态文件** |
 
 要点：
 
 - 不要给它们传猜测的路径，也不要因为它们的输出而去创建目录。
 - 玩家问"mod 装在哪"→ 说明这个类型是在工作区内产出并用 `validate_mod` 校验，没有游戏安装目标。
 - 真正有游戏目录的类型（如 csharp-dll）见 `templates/mod-repo` 的骨架：判据放 `.pi/lib/game-paths.ts`，
-  由 `check_game_paths` / `try_set_game_paths` / `check_runtime` / `install_mod` 共用。
+  由 `check_game_paths` / `set_game_paths` / `check_runtime` / `install_mod` 共用。
 - **目录名（我们这边的规则，由 `create_mod_folder` 强制）**：小写字母开头，其后只能是小写字母/数字/下划线，总长 ≤ 40，且不得是 Windows 保留设备名（con/prn/aux/nul/com1-9/lpt1-9）。

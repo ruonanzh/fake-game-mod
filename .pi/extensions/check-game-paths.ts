@@ -4,7 +4,7 @@
  * 行为上明确说明"无需验证"，并且**什么都不读、不写、不创建**。
  *
  * 有真实游戏目录的类型（csharp-dll 等）请见 templates/mod-repo 的骨架：
- * 判据放 `.pi/lib/game-paths.ts`，由 check_game_paths / try_set_game_paths / check_runtime / install_mod 共用。
+ * 判据放 `.pi/lib/game-paths.ts`，由 check_game_paths / set_game_paths / check_runtime / install_mod 共用。
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
