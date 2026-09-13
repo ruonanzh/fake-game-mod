@@ -60,7 +60,7 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 
 ## 命名约定
 
-- mod 名 / 目录名：`lower_snake_case`（validate_mod 校验）。
+- mod 名（`manifest.name`）：`lower_snake_case`（validate_mod 校验）。
 - 物品 `id`：`lower_snake_case`，全局唯一（validate_mod 校验）。
 
 ## validate_mod 工具用法
