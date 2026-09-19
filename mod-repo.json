@@ -3,5 +3,6 @@
   "modType": "json",
   "game": { "name": "Fake Game" },
   "modInstall": null,
-  "compile": null
+  "compile": null,
+  "workshop": { "supported": false }
 }
