@@ -4,10 +4,18 @@ Fake Game 的 modding 环境。玩家（和 AI agent）在这个环境里就能�
 
 结构说明见 `AGENTS.md`；做 mod 的详细操作手册见 `.pi/skills/mod-authoring/SKILL.md`。
 
-> 小提示：workspace 更新后重新打开即可同步最新内容。
+## 环境声明（`mod-repo.json`）
 
-> 又一个无关痛痒的小改动（测试异步更新检测）。
+| 字段 | 值 | 说明 |
+|---|---|---|
+| `modType` | `json` | 产物是 JSON，**无需编译**（`compile: null`） |
+| `modInstall` | `null` | 游戏直接读 `your_mods/<mod名>/content.json`，**没有"安装"这一步** |
+| `workshop.supported` | `false` | 本游戏**没有创意工坊** —— 工具据此不要求、也不报告 `workshopDir` |
 
-<!-- lifecycle 验收用：无功能影响的一行 -->
+## 更新工作区之后
 
-<!-- 转圈标识实机验证用：无功能影响 -->
+工作区里的工具（`.pi/extensions/**`）**只在会话启动时加载**。所以更新之后：
+
+- **新开**一个会话：直接就是最新工具；
+- **已经在跑的**会话：点「更新」后产品会自动让它重新加载一次（notice 里会说明重载了几个会话）；
+  如果没看到，重开该会话即可。
