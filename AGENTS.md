@@ -6,7 +6,7 @@
 
 - `docs/`：游戏机制、字段说明；`docs/data-layer.md` 说明手写数据层。
 - `reference/example_mod/`：可复用样例；产物格式与字段见 `.pi/skills/mod-authoring/SKILL.md`。
-- `mod-repo.json`：机器可读的游戏与环境声明。
+- `mod-repo.json`：机器可读的游戏与环境声明。其中 `workshop.supported` 声明本游戏**有没有创意工坊**（本仓库为 `false`：没有创意工坊，因此不需要 `workshopDir`）；字段**缺失 = 未知**，不得当作 `false` 之外的其他含义。
 - `.pi/skills/mod-authoring/`：制作、修改和校验的领域方法，任务需要时读取。
 - `.pi/extensions/`：环境检查、安装指引、mod 校验、装进游戏（`install_mod`，本类型为空壳：无需安装）；以工具声明的能力/副作用为准。
 
