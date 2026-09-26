@@ -26,5 +26,5 @@ csharp-dll 类型（如 Escape From Duckov）的 mod repo 有一个**从游戏�
 1. 以本仓库为**蓝本**（比 `templates/mod-repo/` 骨架更完整、带这份参照说明）；
 2. 改 `mod-repo.json` 的 `game.name`（`modInstall` / `compile` 保持 null）；
 3. 重写 `docs/game.md` + `docs/items.md`（你的游戏的字段定义）；
-4. 改 `.pi/skills/mod-authoring/SKILL.md`（产物指导）+ `.pi/extensions/mod-lint.ts`（校验规则对应你的字段）；
+4. 改 `.pi/skills/mod-creator/SKILL.md`（产物指导现归它）+ `.pi/extensions/mod-lint.ts`（校验规则对应你的字段）；
 5. 更新 `reference/example_mod/`（可过校验的样例）。
