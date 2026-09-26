@@ -1,6 +1,6 @@
 ---
-name: mod-authoring
-description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解释与校验排错。任务涉及 manifest.json、content.json、物品字段或 validate_mod 时按需读取；仅咨询不要求创建文件，实际写入取决于 session 权限。
+name: mod-creator
+description: Fake Game 的 JSON mod 制作与修改：`manifest.json` / `content.json` 的字段、命名约定（lower_snake_case）、以及用 `validate_mod` 校验与排错。当玩家要新建/修改/解释一个 mod 怎么写、或排查校验错误时读取。
 ---
 
 # 做 mod（Fake Game）
@@ -10,18 +10,16 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 - `manifest.json` — mod 元信息
 - `content.json` — mod 内容（物品）
 
-做好后用 `validate_mod` 工具校验。
+做好后用 `validate_mod` 工具校验。以下路径均相对 workspace 根目录（不是技能目录）。
+本技能提供领域方法，不授予权限；Game Helper 可用于解释/校验已有 mod，不能因此创建目录或修改源码。
 
 ## 使用方式与条件分支
-
-本技能提供领域方法，不授予权限；Game Helper 可用于解释/校验已有 mod，不能因此创建目录或修改源码。以下路径均相对 workspace 根目录（不是技能目录）。
 
 - **咨询/可行性**：先确定玩家要的效果，检索 `docs/`。不因为读取本技能就创建文件或检查运行时。
 - **实际制作/修改**：复用 `reference/example_mod/` 的结构。写入仅限当前 session 绑定目录；无绑定且准备写入时才调 `create_mod_folder`，选择符合规范的 `lower_snake_case` 名字。已有绑定继续使用，缺失目录先说明阻塞，不另建第二个绑定。
 - **格式不明**：按需读 `docs/items.md`，再实现 `manifest.json`/`content.json`。合理默认小细节，只有影响主要效果的歧义才询问。
-- **运行时**：此 JSON 类型没有额外运行时依赖；正常制作无需机械调用 `check_runtime`/`install_runtime`。玩家明确询问环境时可使用工具核实。
 - **验证**：产物完成或相关内容变化后调用 `validate_mod`。依据错误修复；重复失败先查根因，缺外部信息则报告阻塞，不无限重试。
-- **装进游戏**：本类型**没有安装这一步**——`modInstall` 为 null，游戏直接从 `your_mods/<mod名>/` 读取 `content.json`。`install_mod` 是如实说明「无需安装」的空壳，不要机械调用，也不要把它当成漏做的一步。玩家问「怎么让 mod 生效」时，按 `docs/game.md` 的数据流解释（启动时扫描合并，物品 id 全局唯一、重复覆盖）。
+- **目录名（我们这边的规则，由 `create_mod_folder` 强制）**：小写字母开头，其后只能是小写字母/数字/下划线，总长 ≤ 40，且不得是 Windows 保留设备名（con/prn/aux/nul/com1-9/lpt1-9）。
 
 ## manifest.json
 
@@ -84,20 +82,6 @@ description: Fake Game 的 JSON mod 制作、修改、可行性/制作方法解�
 - 完整可过校验的样例：`reference/example_mod/`。
 - 字段定义：`docs/items.md`。
 
-## 路径工具（gameDir / modInstallDir）
+## 相关技能
 
-本工作区是 **JSON mod type**：没有游戏安装目录，也没有 mod 安装目标 —— 产出靠 `validate_mod`
-在工作区内校验，不往游戏目录里装。因此这两个路径工具在这里是**明确空壳**：
-
-| 工具 | 在这里的行为 |
-|---|---|
-| `check_game_paths` | 返回「无需验证」；**不读、不写、不创建**任何东西 |
-| `set_game_paths` | 返回「无需定位」；**不写状态文件** |
-
-要点：
-
-- 不要给它们传猜测的路径，也不要因为它们的输出而去创建目录。
-- 玩家问"mod 装在哪"→ 说明这个类型是在工作区内产出并用 `validate_mod` 校验，没有游戏安装目标。
-- 真正有游戏目录的类型（如 csharp-dll）见 `templates/mod-repo` 的骨架：判据放 `.pi/lib/game-paths.ts`，
-  由 `check_game_paths` / `set_game_paths` / `check_runtime` / `install_mod` 共用。
-- **目录名（我们这边的规则，由 `create_mod_folder` 强制）**：小写字母开头，其后只能是小写字母/数字/下划线，总长 ≤ 40，且不得是 Windows 保留设备名（con/prn/aux/nul/com1-9/lpt1-9）。
+- 玩家问「装在哪 / 怎么生效」→ `mod-installer`。
