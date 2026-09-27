@@ -10,7 +10,7 @@ import { Type } from "typebox";
  *
  * 若将来该类型出现安装目标（mod-repo.json 的 modInstall 不为 null），本工具只需按 §4.1 做三件事：
  * 读 check_runtime 写的 modInstallDir → 复制产物（目标被别的 mod 占用就改名装 <mod 名>_pimod，
- * 绝不覆盖）→ 在目标目录写 .pi-mod.json = { "name": "<mod 名>" }。
+ * 绝不覆盖）→ （若你的类型有安装步骤）安装记录写在**工作区侧** your_mods/<mod 名>/.pi-mod.json。
  * 不做安装状态管理、不扫目录、不改副本里的 mod 内容；参考实现见 duckov / eu5 两个 repo。
  */
 export default function (pi: ExtensionAPI) {
