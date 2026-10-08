@@ -12,8 +12,9 @@ description: Fake Game 是 JSON 类型：没有游戏安装目录、没有运行
 
 | 工具 | 在这里的行为 |
 |---|---|
+| `try_set_game_dir` | 返回「无需定位」；**不写状态文件** |
+| `set_game_dir` | 返回「无需记录」；**不写状态文件** |
 | `check_game_paths` | 返回「无需验证」；**不读、不写、不创建**任何东西 |
-| `set_game_paths` | 返回「无需定位」；**不写状态文件** |
 
 要点：
 
@@ -23,7 +24,7 @@ description: Fake Game 是 JSON 类型：没有游戏安装目录、没有运行
 
 ## 真正有游戏目录的类型
 
-见 `templates/mod-repo` 的骨架：判据放 `.pi/lib/game-paths.ts`，由 `check_game_paths` / `set_game_paths` / `check_runtime` / `install_mod` 共用。
+见 `templates/mod-repo` 的骨架：判据放 `.pi/lib/game-paths.ts`，由 `check_game_paths` / `try_set_game_dir` / `set_game_dir` / `check_runtime` / `install_mod` 共用。
 
 ## 相关技能
 
