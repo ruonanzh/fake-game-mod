@@ -1,0 +1,9 @@
+{
+  "apiVersion": 1,
+  "id": "mod_manifest",
+  "name": "mod 清单编辑器",
+  "match": ["your_mods/*/manifest.json"],
+  "entry": "index.html",
+  "mode": "edit",
+  "description": "查看/修改 mod 的 manifest.json（表单，Ctrl+S 保存）"
+}

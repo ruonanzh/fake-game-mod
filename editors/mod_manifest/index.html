@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>mod 清单编辑器</title>
+    <!--
+      示例编辑器（契约见设计仓 desktop-gamer-agent-pi docs/editor-tool.md）。
+      只靠宿主 postMessage 桥通信：无网络、无其它权限；脚本必须外链（CSP 不允许 inline script）。
+    -->
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #1b1b1f;
+        --panel: #232327;
+        --text: #e6e6e6;
+        --muted: #9a9aa2;
+        --border: #3a3a42;
+        --accent: #6ea8fe;
+        --danger: #ff6b6b;
+      }
+      [data-theme="light"] {
+        color-scheme: light;
+        --bg: #ffffff;
+        --panel: #f6f6f8;
+        --text: #1d1d20;
+        --muted: #666670;
+        --border: #d9d9e0;
+        --accent: #2f6fdd;
+        --danger: #c62828;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font: 13px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        background: var(--panel);
+        position: sticky;
+        top: 0;
+      }
+      header strong { margin-right: auto; }
+      #status { font-size: 12px; color: var(--muted); }
+      #status[data-state="dirty"] { color: var(--accent); }
+      #status[data-state="error"] { color: var(--danger); }
+      button {
+        font: inherit;
+        padding: 4px 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg);
+        color: var(--text);
+        cursor: pointer;
+      }
+      button:disabled { opacity: 0.5; cursor: default; }
+      main { padding: 14px 12px; display: grid; gap: 10px; max-width: 560px; }
+      label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+      input {
+        font: inherit;
+        padding: 6px 8px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg);
+        color: var(--text);
+      }
+      #error {
+        margin: 0;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--danger);
+        color: var(--danger);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong id="file">manifest.json</strong>
+      <span id="status" data-state="clean">已保存</span>
+      <button id="reload" type="button">重新加载</button>
+      <button id="save" type="button">保存 (Ctrl+S)</button>
+    </header>
+    <main>
+      <label>name<input id="f-name" autocomplete="off" spellcheck="false" /></label>
+      <label>version<input id="f-version" autocomplete="off" spellcheck="false" /></label>
+      <label>description<input id="f-description" autocomplete="off" /></label>
+      <label>author<input id="f-author" autocomplete="off" /></label>
+      <p id="error" hidden></p>
+    </main>
+    <script src="editor.js"></script>
+  </body>
+</html>
